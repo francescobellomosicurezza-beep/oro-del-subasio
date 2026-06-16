@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oro del Subasio — Miele Artigianale d'Umbria</title>
+<meta name="description" content="Miele artigianale di alta montagna prodotto sul Monte Subasio, Umbria, dal 1987.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF3E6;
+    --cream-deep:#F1E6CF;
+    --ink:#2B1B10;
+    --ink-soft:#5A4534;
+    --amber:#C97A1B;
+    --amber-deep:#8C4A0F;
+    --gold:#D4A82E;
+    --forest:#3F5B3D;
+    --line:rgba(43,27,16,.14);
+    --max:1200px;
+    --radius:2px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    line-height:1.08;
+    letter-spacing:-.01em;
+  }
+  em{font-style:italic;color:var(--amber-deep);font-weight:400;}
+  a{color:inherit;text-decoration:none;}
+  img,video{display:block;max-width:100%;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--amber-deep);font-weight:600;margin-bottom:14px;display:block;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--ink);color:var(--cream);
+    padding:14px 28px;border-radius:var(--radius);
+    font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    border:1px solid var(--ink);transition:.25s ease;cursor:pointer;
+  }
+  .btn:hover{background:var(--amber);border-color:var(--amber);}
+  .btn--ghost{background:transparent;color:var(--cream);border-color:rgba(250,243,230,.55);}
+  .btn--ghost:hover{background:rgba(250,243,230,.12);border-color:var(--cream);}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* progress bar */
+  #progress{position:fixed;top:0;left:0;height:3px;background:var(--amber);z-index:200;width:0%;}
+
+  /* nav */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:20px 0;transition:.3s ease;
+  }
+  header.scrolled{background:rgba(250,243,230,.92);backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--line);}
+  nav{display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+  header.scrolled .logo{color:var(--ink);}
+  .navlinks{display:flex;gap:34px;font-size:13px;letter-spacing:.04em;}
+  .navlinks a{color:rgba(250,243,230,.85);}
+  header.scrolled .navlinks a{color:var(--ink-soft);}
+  .navlinks a:hover{color:var(--amber);}
+  .navcta{display:flex;align-items:center;gap:20px;}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+  .burger span{width:22px;height:2px;background:var(--cream);}
+  header.scrolled .burger span{background:var(--ink);}
+
+  /* hero */
+  .hero{
+    position:relative;height:100vh;min-height:640px;display:flex;align-items:center;
+    overflow:hidden;color:var(--cream);
+  }
+  .hero video,.hero img.fallback{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  }
+  .hero::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(20,12,6,.55) 0%,rgba(20,12,6,.35) 45%,rgba(20,12,6,.75) 100%);
+  }
+  .hero-content{position:relative;z-index:2;width:100%;}
+  .hero h1{font-size:clamp(48px,8vw,108px);}
+  .hero .lede{font-size:clamp(16px,2vw,20px);max-width:480px;margin:18px 0 32px;color:rgba(250,243,230,.88);}
+  .scrollcue{
+    position:absolute;bottom:36px;left:32px;z-index:2;display:flex;align-items:center;gap:12px;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,243,230,.75);
+  }
+  .scrollcue .line{width:1px;height:36px;background:rgba(250,243,230,.5);position:relative;overflow:hidden;}
+  .scrollcue .line::after{content:'';position:absolute;top:0;left:0;width:100%;height:40%;background:var(--gold);animation:dropline 1.8s ease-in-out infinite;}
+  @keyframes dropline{0%{top:-40%;}100%{top:100%;}}
+
+  /* capitoli (storytelling chapters) */
+  .chapters{position:relative;}
+  .chapter{
+    position:relative;min-height:92vh;display:flex;align-items:center;color:var(--cream);
+    overflow:hidden;
+  }
+  .chapter .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 6s ease;}
+  .chapter.visible .bg{transform:scale(1);}
+  .chapter::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(20,12,6,.78) 0%,rgba(20,12,6,.42) 55%,rgba(20,12,6,.7) 100%);}
+  .chapter-inner{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:end;padding:80px 0;}
+  .chapter-num{font-family:'Fraunces',serif;font-size:15px;color:var(--gold);letter-spacing:.1em;}
+  .chapter-num small{display:block;font-size:11px;color:rgba(250,243,230,.6);letter-spacing:.15em;margin-top:6px;}
+  .chapter h2{font-size:clamp(32px,5vw,56px);max-width:620px;}
+  .chapter p{margin-top:16px;max-width:520px;color:rgba(250,243,230,.85);font-size:16px;}
+  .chapter-dots{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:14px;}
+  .chapter-v-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:center;}
+  .jar-canvas-wrap{display:flex;justify-content:center;}
+  #jarCanvas{width:100%;max-width:360px;height:auto;}
+  @media (max-width:980px){.chapter-v-grid{grid-template-columns:1fr;}.jar-canvas-wrap{order:-1;}#jarCanvas{max-width:260px;}}
+  .chapter-dots span{width:7px;height:7px;border-radius:50%;background:rgba(43,27,16,.25);display:block;transition:.3s;}
+  .chapter-dots span.active{background:var(--amber);transform:scale(1.4);}
+  .dots-hidden{opacity:0;pointer-events:none;}
+
+  /* storia */
+  .storia{padding:120px 0 0;}
+  .storia-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+  .storia-grid img{border-radius:var(--radius);width:100%;height:560px;object-fit:cover;}
+  .stats{display:flex;gap:48px;margin-top:40px;}
+  .stat b{font-family:'Fraunces',serif;font-size:40px;display:block;color:var(--amber-deep);font-weight:500;}
+  .stat span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+  .ticker{
+    margin-top:90px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:18px 0;overflow:hidden;white-space:nowrap;
+  }
+  .ticker-track{display:inline-block;animation:ticker 26s linear infinite;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink-soft);}
+  @keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+  /* processo */
+  .processo{padding:130px 0;}
+  .section-head{max-width:640px;margin-bottom:64px;}
+  .section-head h2{font-size:clamp(30px,4vw,46px);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  .step{position:relative;}
+  .step-media{position:relative;height:200px;border-radius:var(--radius);overflow:hidden;margin-bottom:18px;background:var(--ink);}
+  .step-media video,.step-media img{width:100%;height:100%;object-fit:cover;}
+  .step-num{position:absolute;top:12px;left:12px;font-family:'Fraunces',serif;color:var(--cream);font-size:13px;letter-spacing:.08em;background:rgba(20,12,6,.55);padding:4px 9px;border-radius:2px;}
+  .step h3{font-size:18px;margin-bottom:8px;}
+  .step p{font-size:14px;color:var(--ink-soft);}
+
+  /* composizione */
+  .composizione{position:relative;padding:130px 0;background:var(--ink);color:var(--cream);overflow:hidden;}
+  .composizione .texture{position:absolute;inset:0;opacity:.16;object-fit:cover;width:100%;height:100%;}
+  .composizione::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,27,16,.2),rgba(43,27,16,.92));}
+  .composizione .wrap{position:relative;z-index:2;}
+  .composizione .section-head p{color:rgba(250,243,230,.75);}
+  .composizione .eyebrow{color:var(--gold);}
+  .chips{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(250,243,230,.14);border:1px solid rgba(250,243,230,.14);}
+  .chip{background:rgba(20,12,6,.55);padding:32px 26px;}
+  .chip b{font-family:'Fraunces',serif;font-size:34px;display:block;color:var(--gold);font-weight:500;}
+  .chip h4{font-size:15px;margin:10px 0 8px;font-weight:600;}
+  .chip p{font-size:13px;color:rgba(250,243,230,.7);}
+  .chip code{display:block;margin-top:14px;font-size:11px;letter-spacing:.06em;color:var(--amber);font-family:monospace;}
+
+  /* prodotti */
+  .prodotti{padding:130px 0;}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .card{border:1px solid var(--line);}
+  .card-media{height:280px;overflow:hidden;position:relative;}
+  .card-media img{width:100%;height:100%;object-fit:cover;transition:.5s;}
+  .card:hover .card-media img{transform:scale(1.05);}
+  .card-tag{position:absolute;top:14px;left:14px;background:var(--cream);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;color:var(--ink);}
+  .card-body{padding:26px 24px;}
+  .card-body h3{font-size:24px;margin-bottom:10px;}
+  .card-body p{font-size:14px;color:var(--ink-soft);margin-bottom:18px;}
+  .sizes{display:flex;gap:8px;margin-bottom:18px;}
+  .size{font-size:12px;border:1px solid var(--line);padding:6px 12px;border-radius:20px;color:var(--ink-soft);}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:18px;}
+  .price{font-family:'Fraunces',serif;font-size:18px;}
+  .price small{font-size:11px;color:var(--ink-soft);font-family:'Work Sans',sans-serif;}
+  .link-btn{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:3px;}
+
+  /* diario / galleria mista */
+  .diario{padding:0 0 130px;}
+  .mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:8px;}
+  .mosaic figure{position:relative;overflow:hidden;margin:0;background:var(--ink);}
+  .mosaic img,.mosaic video{width:100%;height:100%;object-fit:cover;}
+  .mosaic figcaption{
+    position:absolute;bottom:10px;left:12px;color:var(--cream);font-size:11px;
+    letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:.3s;text-shadow:0 1px 4px rgba(0,0,0,.6);
+  }
+  .mosaic figure:hover figcaption{opacity:1;}
+  .mosaic figure:hover img,.mosaic figure:hover video{filter:brightness(.85);}
+  .mosaic .tall{grid-row:span 2;}
+  .mosaic .wide{grid-column:span 2;}
+  .video-pin{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:rgba(20,12,6,.55);display:flex;align-items:center;justify-content:center;}
+  .video-pin svg{width:8px;height:8px;fill:var(--cream);}
+
+  /* testimonianze */
+  .testi{padding:0 0 130px;}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .testi-card{border-top:2px solid var(--amber);padding-top:22px;}
+  .stars{color:var(--gold);font-size:13px;letter-spacing:.12em;margin-bottom:14px;}
+  .testi-card p{font-family:'Fraunces',serif;font-style:italic;font-size:18px;line-height:1.5;}
+  .testi-card cite{display:block;margin-top:18px;font-size:13px;color:var(--ink-soft);font-style:normal;}
+
+  /* contatto */
+  .contatto{position:relative;color:var(--cream);padding:140px 0;overflow:hidden;}
+  .contatto video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .contatto::after{content:'';position:absolute;inset:0;background:rgba(20,12,6,.72);}
+  .contatto .wrap{position:relative;z-index:2;}
+  .contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:64px;align-items:start;}
+  .contatto h2{font-size:clamp(32px,4.5vw,52px);margin-bottom:18px;}
+  .contatto p.lede{color:rgba(250,243,230,.8);max-width:440px;margin-bottom:32px;}
+  .contact-info div{margin-bottom:22px;}
+  .contact-info span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+  .contact-info a,.contact-info p{font-size:16px;}
+
+  /* footer */
+  footer{background:var(--ink);color:rgba(250,243,230,.7);padding:70px 0 28px;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:50px;}
+  footer h4{font-family:'Work Sans',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--cream);margin-bottom:16px;}
+  footer ul{list-style:none;}
+  footer li{margin-bottom:10px;font-size:14px;}
+  footer .logo{color:var(--cream);margin-bottom:14px;display:block;}
+  footer p.desc{font-size:14px;max-width:280px;}
+  .footer-bottom{border-top:1px solid rgba(250,243,230,.14);padding-top:22px;display:flex;justify-content:space-between;font-size:12px;}
+  .footer-bottom .legal a{margin-left:18px;}
+
+  @media (max-width:980px){
+    .navlinks{display:none;}
+    .burger{display:flex;}
+    .storia-grid,.contact-grid,.footer-grid{grid-template-columns:1fr;gap:36px;}
+    .steps{grid-template-columns:repeat(2,1fr);}
+    .chips{grid-template-columns:repeat(2,1fr);}
+    .cards{grid-template-columns:1fr;}
+    .testi-grid{grid-template-columns:1fr;}
+    .mosaic{grid-template-columns:repeat(2,1fr);}
+    .mosaic .wide{grid-column:span 2;}
+    .chapter-inner{grid-template-columns:1fr;}
+    .chapter-dots{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#">Oro del Subasio</a>
+      <div class="navlinks">
+        <a href="#storia">Storia</a>
+        <a href="#composizione">Composizione</a>
+        <a href="#prodotti">Prodotti</a>
+        <a href="#diario">Diario</a>
+        <a href="#contatto">Contatto</a>
+      </div>
+      <div class="navcta">
+        <a href="#contatto" class="btn">Ordina ora</a>
+        <div class="burger" id="burger"><span></span><span></span><span></span></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <video autoplay muted loop playsinline poster="assets/miele-versato-vasetto-1-poster.jpg">
+    <source src="assets/miele-versato-vasetto-1.mp4" type="video/mp4">
+  </video>
+  <div class="wrap hero-content">
+    <span class="eyebrow" style="color:var(--gold)">Monte Subasio · Umbria · Italia · dal 1987</span>
+    <h1>Oro del <em>Subasio</em></h1>
+    <p class="lede">Miele artigianale di alta montagna, raccolto a 1.290 metri nel cuore del Parco Naturale Regionale dell'Umbria.</p>
+    <a href="#storia" class="btn btn--ghost">Scopri il viaggio</a>
+  </div>
+  <div class="scrollcue"><span class="line"></span> I / V</div>
+</section>
+
+<!-- CAPITOLI -->
+<div class="chapters">
+  <div class="chapter-dots" id="chapterDots">
+    <span class="active"></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <section class="chapter" data-chapter="0">
+    <img class="bg" src="assets/api-cluster-melario.jpg" alt="Api sul melario al sole" loading="lazy">
+    <div class="wrap chapter-inner">
+      <div class="chapter-num">Capitolo I<small>Il volo</small></div>
+      <div>
+        <h2 class="reveal">Nasce tutto da <em>un volo</em></h2>
+        <p class="reveal">Un'ape operaia percorre fino a 5 km, visitando 1.500 fiori in un solo viaggio. Sul Monte Subasio trova narcisi, orchidee, lavanda e trifoglio — una biodiversità unica al mondo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-chapter="1">
+    <img class="bg" src="assets/favo-api-coperto.jpg" alt="Favo coperto di api operaie" loading="lazy">
+    <div class="wrap chapter-inner">
+      <div class="chapter-num">Capitolo II<small>Il nettare</small></div>
+      <div>
+        <h2 class="reveal">Il nettare di <em>mille fiori</em></h2>
+        <p class="reveal">Ogni fiore del Subasio produce un nettare diverso. Altitudine, suolo, microclima e biodiversità creano profili aromatici irripetibili.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-chapter="2">
+    <video class="bg" muted loop playsinline preload="none" poster="assets/api-melario-dettaglio-poster.jpg" data-src="assets/api-melario-dettaglio.mp4"></video>
+    <div class="wrap chapter-inner">
+      <div class="chapter-num">Capitolo III<small>L'alveare</small></div>
+      <div>
+        <h2 class="reveal">La magia dell'<em>alveare</em></h2>
+        <p class="reveal">Dentro l'arnia, 60.000 api trasformano il nettare in miele. Lo disidratano, vi aggiungono enzimi, lo sigillano con cera. Un processo biologico preciso che dura settimane.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-chapter="3">
+    <img class="bg" src="assets/miele-estrazione-favo.jpg" alt="Favo scuro nel maturatore" loading="lazy">
+    <div class="wrap chapter-inner">
+      <div class="chapter-num">Capitolo IV<small>La molecola</small></div>
+      <div>
+        <h2 class="reveal">Dentro ogni <em>molecola</em></h2>
+        <p class="reveal">Fruttosio, glucosio, enzimi, flavonoidi. Una sinfonia chimica di oltre 200 composti — antiossidanti, antibatterici, energizzanti — che nessun laboratorio sa replicare.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter chapter--v" data-chapter="4">
+    <video class="bg" muted loop playsinline preload="none" poster="assets/miele-versato-vasetto-2-poster.jpg" data-src="assets/miele-versato-vasetto-2.mp4" style="opacity:.35"></video>
+    <div class="wrap chapter-inner chapter-inner--v">
+      <div class="chapter-num">Capitolo V<small>Il vasetto</small></div>
+      <div class="chapter-v-grid">
+        <div>
+          <h2 class="reveal">Nel vasetto, <em>intatto</em></h2>
+          <p class="reveal">Filtrazione a freddo. Nessun riscaldamento oltre 37°C. Nessun additivo. Dal fiore al vasetto, ogni goccia porta in sé la purezza di un ecosistema protetto.</p>
+        </div>
+        <div class="jar-canvas-wrap">
+          <canvas id="jarCanvas" width="360" height="420" aria-label="Animazione: goccia di miele che diventa vasetto dorato"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- STORIA -->
+<section class="storia" id="storia">
+  <div class="wrap">
+    <div class="storia-grid">
+      <div>
+        <span class="eyebrow">La nostra storia</span>
+        <h2 class="reveal">Tre generazioni di <em>apicoltori</em></h2>
+        <p class="reveal" style="margin-top:18px;color:var(--ink-soft);max-width:460px;">Dal 1987, la famiglia Rossi coltiva le proprie arnie sulle pendici del Monte Subasio, nel cuore del Parco Naturale Regionale dell'Umbria. Un mestiere antico trasmesso di padre in figlio, fatto di rispetto per la natura e pazienza per i suoi ritmi.</p>
+        <div class="stats reveal">
+          <div class="stat"><b data-count="37">0</b><span>Anni</span></div>
+          <div class="stat"><b data-count="120">0</b><span>Arnie</span></div>
+          <div class="stat"><b data-count="1290">0</b><span>Metri slm</span></div>
+        </div>
+      </div>
+      <img src="assets/apicoltore-al-lavoro.jpg" alt="Apicoltore al lavoro tra gli ulivi del Subasio" loading="lazy">
+    </div>
+  </div>
+  <div class="ticker">
+    <div class="ticker-track">Millefiori ✦ Acacia ✦ Castagno ✦ Monte Subasio · 1.290 mt slm ✦ Parco Naturale Protetto ✦ Umbria, Italia ✦ Millefiori ✦ Acacia ✦ Castagno ✦ Monte Subasio · 1.290 mt slm ✦ Parco Naturale Protetto ✦ Umbria, Italia ✦</div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section class="processo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Dal fiore al vasetto</span>
+      <h2 class="reveal">Il viaggio di ogni <em>goccia</em></h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-media"><span class="step-num">01</span><video muted loop playsinline preload="none" poster="assets/api-tra-favi-dettaglio-poster.jpg" data-src="assets/api-tra-favi-dettaglio.mp4"></video></div>
+        <h3>L'ape raccoglie</h3>
+        <p>5 km di volo, 1.500 fiori al giorno, tra orchidee, narcisi e lavanda selvatica del Subasio.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-media"><span class="step-num">02</span><img src="assets/favo-api-coperto.jpg" alt="Api che trasformano il nettare" loading="lazy"></div>
+        <h3>La colonia trasforma</h3>
+        <p>60.000 api disidratano il nettare, aggiungono enzimi, lo sigillano con cera. Settimane di lavoro biologico preciso.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-media"><span class="step-num">03</span><video muted loop playsinline preload="none" poster="assets/apicoltore-mostra-favo-poster.jpg" data-src="assets/apicoltore-mostra-favo.mp4"></video></div>
+        <h3>Raccolta con rispetto</h3>
+        <p>Solo favi opercolati, abbondanti scorte invernali alle api. Mai forzature, mai compromessi.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-media"><span class="step-num">04</span><img src="assets/invasettamento-miele.jpg" alt="Miele filtrato versato nel vasetto" loading="lazy"></div>
+        <h3>Filtrazione a freddo</h3>
+        <p>Nessun riscaldamento oltre 37°C. Nessun additivo. Il miele arriva intatto, vivo, esattamente com'era nell'arnia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPOSIZIONE -->
+<section class="composizione" id="composizione">
+  <img class="texture" src="assets/disopercolatura-favo-poster.jpg" alt="" loading="lazy">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Composizione chimica</span>
+      <h2 class="reveal">La scienza della <em>dolcezza</em></h2>
+      <p class="reveal" style="margin-top:14px;">Il miele del Subasio è una sinfonia molecolare di oltre 200 composti. Nessun laboratorio al mondo sa replicarla.</p>
+    </div>
+    <div class="chips">
+      <div class="chip reveal"><b>38%</b><h4>Fruttosio</h4><p>Zucchero principale. Dolcezza intensa, fonte di energia immediata</p><code>C₆H₁₂O₆</code></div>
+      <div class="chip reveal"><b>31%</b><h4>Glucosio</h4><p>Favorisce la cristallizzazione naturale. Energia pronta per muscoli e cervello</p><code>C₆H₁₂O₆</code></div>
+      <div class="chip reveal"><b>17%</b><h4>Acqua</h4><p>Umidità sotto il 18%: conservazione senza limiti, naturalmente sterile</p><code>H₂O</code></div>
+      <div class="chip reveal"><b>14%</b><h4>Enzimi & Polifenoli</h4><p>Diastasi, invertasi, flavonoidi. Antiossidanti e antibatterici naturali</p><code>200+ composti bioattivi</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODOTTI -->
+<section class="prodotti" id="prodotti">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">La collezione 2025</span>
+      <h2 class="reveal">I nostri <em>mieli</em></h2>
+    </div>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="card-media"><span class="card-tag">Millefiori</span><img src="assets/invasettamento-miele.jpg" alt="Miele Millefiori del Subasio" loading="lazy"></div>
+        <div class="card-body">
+          <h3>Millefiori del Subasio</h3>
+          <p>Profumo floreale complesso con note di lavanda, trifoglio e maggiorana selvatica. Colore ambrato dorato, consistenza cremosa.</p>
+          <div class="sizes"><span class="size">250g</span><span class="size">500g</span><span class="size">1kg</span></div>
+          <div class="card-foot"><div class="price">da 9€<br><small>al vasetto</small></div><a class="link-btn" href="#contatto">Ordina</a></div>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="card-media"><span class="card-tag">Riserva</span><img src="assets/favo-api-coperto.jpg" alt="Miele di Acacia Riserva" loading="lazy"></div>
+        <div class="card-body">
+          <h3>Acacia · Alta Quota</h3>
+          <p>Cristallino, quasi trasparente, di rara delicatezza. Non cristallizza, si conserva anni. Il profilo più fine dell'apicoltura italiana.</p>
+          <div class="sizes"><span class="size">250g</span><span class="size">500g</span></div>
+          <div class="card-foot"><div class="price">da 14€<br><small>al vasetto</small></div><a class="link-btn" href="#contatto">Ordina</a></div>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="card-media"><span class="card-tag">Boschi del Subasio</span><img src="assets/disopercolatura-miele-scuro-poster.jpg" alt="Miele di Castagno" loading="lazy"></div>
+        <div class="card-body">
+          <h3>Castagno</h3>
+          <p>Scuro, intenso, amaro in chiusura. Eccezionale con formaggi stagionati, salumi, carni rosse. Tra i mieli più ricchi di antiossidanti.</p>
+          <div class="sizes"><span class="size">250g</span><span class="size">500g</span><span class="size">1kg</span></div>
+          <div class="card-foot"><div class="price">da 11€<br><small>al vasetto</small></div><a class="link-btn" href="#contatto">Ordina</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIARIO DELL'APIARIO (galleria mista foto+video) -->
+<section class="diario" id="diario">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Diario dell'apiario</span>
+      <h2 class="reveal">Niente posa, solo <em>l'arnia</em></h2>
+      <p class="reveal" style="margin-top:14px;">Scatti e brevi riprese girate direttamente in apiario, senza messa in scena.</p>
+    </div>
+    <div class="mosaic">
+      <figure class="wide tall reveal">
+        <img src="assets/apicoltore-al-lavoro.jpg" alt="Apicoltore al lavoro" loading="lazy">
+        <figcaption>Controllo del melario</figcaption>
+      </figure>
+      <figure class="reveal">
+        <video muted loop playsinline preload="none" poster="assets/favo-miele-scuro-dettaglio-poster.jpg" data-src="assets/favo-miele-scuro-dettaglio.mp4"></video>
+        <span class="video-pin"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <figcaption>Favo opercolato</figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="assets/miele-estrazione-favo.jpg" alt="Favo nel maturatore" loading="lazy">
+        <figcaption>In maturazione</figcaption>
+      </figure>
+      <figure class="tall reveal">
+        <video muted loop playsinline preload="none" poster="assets/disopercolatura-favo-poster.jpg" data-src="assets/disopercolatura-favo.mp4"></video>
+        <span class="video-pin"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <figcaption>Disopercolatura</figcaption>
+      </figure>
+      <figure class="wide reveal">
+        <img src="assets/api-cluster-melario.jpg" alt="Api sul melario" loading="lazy">
+        <figcaption>Le nostre api</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section class="testi">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Chi ci ha scelto</span>
+      <h2 class="reveal">Le loro <em>parole</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>"L'acacia è semplicemente straordinaria. Non avevo mai assaggiato nulla di così pulito e delicato. Lo ordino ogni due mesi."</p>
+        <cite>— Martina R. · Milano</cite>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>"Il castagno con i formaggi stagionati è un'esperienza che non dimentichi. Lo racconto a chiunque venga a cena da me."</p>
+        <cite>— Lorenzo B. · Roma</cite>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>"Ho regalato il cofanetto ai miei suoceri per Natale. Sono rimasti senza parole. La confezione è elegante quanto il prodotto."</p>
+        <cite>— Sara F. · Perugia</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATTO -->
+<section class="contatto" id="contatto">
+  <video autoplay muted loop playsinline poster="assets/disopercolatura-miele-scuro-poster.jpg">
+    <source src="assets/disopercolatura-miele-scuro.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <span class="eyebrow" style="color:var(--gold)">Ordina o scrivici</span>
+        <h2>Porta l'oro del Subasio <em>a casa tua</em></h2>
+        <p class="lede">Spedizioni in tutta Italia · Confezioni regalo disponibili.</p>
+        <a href="mailto:info@orodelsubasio.it" class="btn">Invia il messaggio</a>
+      </div>
+      <div class="contact-info">
+        <div><span>Email</span><a href="mailto:info@orodelsubasio.it">info@orodelsubasio.it</a></div>
+        <div><span>Telefono</span><a href="tel:+390750000000">+39 075 000 0000</a></div>
+        <div><span>Dove siamo</span><p>Monte Subasio, Umbria</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="#">Oro del Subasio</a>
+        <p class="desc">Miele artigianale di alta montagna prodotto nel Parco Naturale del Monte Subasio, Umbria, dal 1987.</p>
+      </div>
+      <div>
+        <h4>Prodotti</h4>
+        <ul><li><a href="#prodotti">Millefiori</a></li><li><a href="#prodotti">Acacia Riserva</a></li><li><a href="#prodotti">Castagno</a></li><li><a href="#contatto">Cofanetti Regalo</a></li></ul>
+      </div>
+      <div>
+        <h4>Azienda</h4>
+        <ul><li><a href="#storia">La nostra storia</a></li><li><a href="#composizione">Il miele</a></li><li><a href="#diario">Diario</a></li><li><a href="#contatto">Contattaci</a></li></ul>
+      </div>
+      <div>
+        <h4>Contatti</h4>
+        <ul><li><a href="mailto:info@orodelsubasio.it">info@orodelsubasio.it</a></li><li><a href="tel:+390750000000">+39 075 000 0000</a></li><li>Monte Subasio, PG</li><li><a href="#">Instagram</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Oro del Subasio · Tutti i diritti riservati · P.IVA 00000000000</span>
+      <span class="legal"><a href="#">Privacy</a><a href="#">Cookie</a><a href="#">Termini</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // progress bar
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = pct + '%';
+    document.getElementById('siteHeader').classList.toggle('scrolled', h.scrollTop > 60);
+  });
+
+  // reveal on scroll
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: .2 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // chapter backgrounds: lazy video load + active state + dots
+  const chapters = document.querySelectorAll('.chapter');
+  const dots = document.querySelectorAll('#chapterDots span');
+  const chapterObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const ch = entry.target;
+      const vid = ch.querySelector('video.bg');
+      if (entry.isIntersecting) {
+        ch.classList.add('visible');
+        if (vid && !vid.src) { vid.src = vid.dataset.src; vid.play().catch(()=>{}); }
+        else if (vid) { vid.play().catch(()=>{}); }
+        dots.forEach(d => d.classList.remove('active'));
+        dots[ch.dataset.chapter].classList.add('active');
+      } else if (vid) {
+        vid.pause();
+      }
+    });
+  }, { threshold: .55 });
+  chapters.forEach(c => chapterObs.observe(c));
+
+  // generic lazy videos (process steps, gallery)
+  const lazyVideos = document.querySelectorAll('video[data-src]:not(.bg)');
+  const videoObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const vid = entry.target;
+      if (entry.isIntersecting) {
+        if (!vid.src) vid.src = vid.dataset.src;
+        vid.play().catch(()=>{});
+      } else {
+        vid.pause();
+      }
+    });
+  }, { threshold: .3 });
+  lazyVideos.forEach(v => videoObs.observe(v));
+
+  // animated stat counters
+  const stats = document.querySelectorAll('.stat b');
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      let cur = 0;
+      const step = Math.max(1, Math.ceil(target / 60));
+      const tick = () => {
+        cur += step;
+        if (cur >= target) { el.textContent = target; return; }
+        el.textContent = cur;
+        requestAnimationFrame(tick);
+      };
+      tick();
+      statObs.unobserve(el);
+    });
+  }, { threshold: .4 });
+  stats.forEach(s => statObs.observe(s));
+
+  // mobile nav toggle
+  document.getElementById('burger').addEventListener('click', () => {
+    document.querySelector('.navlinks').classList.toggle('mobile-open');
+  });
+
+  // ===== Capitolo V: goccia che diventa vasetto dorato con scintille =====
+  (function(){
+    const canvas = document.getElementById('jarCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+    const easeOutBack = t => {
+      const c1 = 1.70158, c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    };
+
+    const JAR_CX = W/2, JAR_TOP = 215, JAR_BOTTOM = 360, JAR_W = 150;
+    let splashParticles = [];
+    let startTime = null, visible = false, rafId = null, splashSpawned = false, lastT = 0;
+
+    function drawGlow(){
+      const g = ctx.createRadialGradient(JAR_CX, 300, 10, JAR_CX, 300, 220);
+      g.addColorStop(0, 'rgba(212,168,46,.35)');
+      g.addColorStop(1, 'rgba(212,168,46,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+    }
+
+    function drawDrop(progress){
+      const y = 10 + (JAR_TOP - 10) * easeOutCubic(progress);
+      const squash = progress > .92 ? 1 + (progress-.92)*4 : 1;
+      ctx.save();
+      ctx.translate(JAR_CX, y);
+      ctx.scale(1/squash, squash);
+      ctx.beginPath();
+      ctx.ellipse(0,0,9,13,0,0,Math.PI*2);
+      const g = ctx.createLinearGradient(0,-13,0,13);
+      g.addColorStop(0,'#E8B23A'); g.addColorStop(1,'#A8650F');
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function spawnSplash(){
+      splashParticles = [];
+      for(let i=0;i<7;i++){
+        const a = (Math.PI*2*i)/7 + Math.random()*.3;
+        splashParticles.push({ x: JAR_CX, y: JAR_TOP, vx: Math.cos(a)*1.6, vy: Math.sin(a)*1.6 - 1.2, life: 1 });
+      }
+    }
+
+    function drawSplash(dt){
+      splashParticles.forEach(p=>{
+        p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life -= dt/350;
+        if(p.life>0){
+          ctx.globalAlpha = Math.max(0,p.life);
+          ctx.fillStyle = '#E8B23A';
+          ctx.beginPath(); ctx.arc(p.x,p.y,2.4,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      });
+      splashParticles = splashParticles.filter(p=>p.life>0);
+    }
+
+    function drawJar(scale){
+      if(scale<=0) return;
+      ctx.save();
+      ctx.translate(JAR_CX, (JAR_TOP+JAR_BOTTOM)/2);
+      ctx.scale(scale, scale);
+      ctx.translate(-JAR_CX, -(JAR_TOP+JAR_BOTTOM)/2);
+
+      const r = 14, x0 = JAR_CX - JAR_W/2, x1 = JAR_CX + JAR_W/2;
+      ctx.beginPath();
+      ctx.moveTo(x0, JAR_TOP+30);
+      ctx.lineTo(x0, JAR_BOTTOM-r);
+      ctx.quadraticCurveTo(x0, JAR_BOTTOM, x0+r, JAR_BOTTOM);
+      ctx.lineTo(x1-r, JAR_BOTTOM);
+      ctx.quadraticCurveTo(x1, JAR_BOTTOM, x1, JAR_BOTTOM-r);
+      ctx.lineTo(x1, JAR_TOP+30);
+      ctx.closePath();
+      const bodyG = ctx.createLinearGradient(x0,0,x1,0);
+      bodyG.addColorStop(0,'#B9690F'); bodyG.addColorStop(.5,'#E8B23A'); bodyG.addColorStop(1,'#9C5A12');
+      ctx.fillStyle = bodyG;
+      ctx.fill();
+
+      ctx.fillStyle = '#5A4534';
+      ctx.fillRect(JAR_CX-32, JAR_TOP+6, 64, 26);
+      ctx.beginPath();
+      ctx.ellipse(JAR_CX, JAR_TOP+6, 34, 10, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#3F2E1C';
+      ctx.fill();
+
+      const labelY = (JAR_TOP+JAR_BOTTOM)/2 + 10;
+      ctx.fillStyle = '#FAF3E6';
+      ctx.fillRect(x0+10, labelY-26, JAR_W-20, 52);
+      ctx.strokeStyle = '#C97A1B'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(x0+10, labelY-26, JAR_W-20, 52);
+      ctx.fillStyle = '#2B1B10';
+      ctx.font = '600 13px Fraunces, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Oro del', JAR_CX, labelY-4);
+      ctx.fillText('Subasio', JAR_CX, labelY+14);
+      ctx.restore();
+    }
+
+    function drawSparkles(t){
+      const pts = [
+        [JAR_CX-95,JAR_TOP+10],[JAR_CX+92,JAR_TOP+40],[JAR_CX-80,JAR_BOTTOM-30],
+        [JAR_CX+88,JAR_BOTTOM-60],[JAR_CX-40,JAR_TOP-15],[JAR_CX+50,JAR_TOP-25],
+        [JAR_CX-105,JAR_BOTTOM-90],[JAR_CX+100,JAR_TOP+90]
+      ];
+      pts.forEach((p,i)=>{
+        const phase = (t/600 + i*0.7) % (Math.PI*2);
+        const op = (Math.sin(phase)+1)/2 * .8 + .15;
+        const size = 3 + (Math.sin(phase)+1)*2;
+        ctx.save();
+        ctx.translate(p[0],p[1]);
+        ctx.globalAlpha = op;
+        ctx.fillStyle = '#D4A82E';
+        ctx.beginPath();
+        ctx.moveTo(0,-size); ctx.lineTo(size*.3,-size*.3); ctx.lineTo(size,0);
+        ctx.lineTo(size*.3,size*.3); ctx.lineTo(0,size); ctx.lineTo(-size*.3,size*.3);
+        ctx.lineTo(-size,0); ctx.lineTo(-size*.3,-size*.3);
+        ctx.closePath(); ctx.fill();
+        ctx.restore();
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function frame(now){
+      if(!startTime) startTime = now;
+      const elapsed = now - startTime;
+      const dt = now - (lastT||now); lastT = now;
+
+      ctx.clearRect(0,0,W,H);
+      drawGlow();
+
+      if(reduceMotion){
+        drawJar(1);
+        drawSparkles(now);
+        if(visible) rafId = requestAnimationFrame(frame);
+        return;
+      }
+
+      const dropDur = 650, jarDur = 600, jarStart = dropDur + 60;
+
+      if(elapsed < dropDur){
+        drawDrop(elapsed/dropDur);
+      } else {
+        if(!splashSpawned){ spawnSplash(); splashSpawned = true; }
+        drawSplash(dt);
+      }
+      if(elapsed > jarStart){
+        const jp = Math.min(1, (elapsed-jarStart)/jarDur);
+        drawJar(easeOutBack(jp));
+      }
+      if(elapsed > jarStart + jarDur*0.6){
+        drawSparkles(now);
+      }
+      if(visible) rafId = requestAnimationFrame(frame);
+    }
+
+    const jarObs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          visible = true; startTime = null; splashSpawned = false; lastT = 0;
+          if(!rafId) rafId = requestAnimationFrame(frame);
+        } else {
+          visible = false;
+          if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+        }
+      });
+    }, {threshold:.5});
+    const vChapter = document.querySelector('.chapter--v');
+    if(vChapter) jarObs.observe(vChapter);
+  })();
+</script>
+</body>
+</html>
