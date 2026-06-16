@@ -11,16 +11,19 @@
 <style>
   :root{
     --cream:#FAF3E6;
-    --cream-deep:#F1E6CF;
-    --ink:#2B1B10;
+    --cream-deep:#EFE7D6;
+    --ink:#241B12;
     --ink-soft:#5A4534;
-    --amber:#C97A1B;
+    --amber:#B86A12;
     --amber-deep:#8C4A0F;
     --gold:#D4A82E;
-    --forest:#3F5B3D;
-    --line:rgba(43,27,16,.14);
+    --forest:#3C5A3A;
+    --forest-deep:#23362A;
+    --line:rgba(36,27,18,.14);
     --max:1200px;
     --radius:2px;
+    /* grading fotografico unificato: le riprese reali dell'apiario come un unico racconto */
+    --media-grade:saturate(1.14) contrast(1.08) brightness(.98);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -63,6 +66,7 @@
   .btn--ghost{background:transparent;color:var(--cream);border-color:rgba(250,243,230,.55);}
   .btn--ghost::before{background:rgba(250,243,230,.12);}
   .btn--ghost:hover{border-color:var(--cream);}
+  .btn:focus-visible,.link-btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--forest);outline-offset:2px;border-radius:1px;}
   .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.34,.1,.68,.55),transform .8s cubic-bezier(.34,.1,.68,.55);}
   .reveal.visible{opacity:1;transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){
@@ -85,40 +89,41 @@
   .navlinks{display:flex;gap:34px;font-size:13px;letter-spacing:.04em;}
   .navlinks a{color:rgba(250,243,230,.85);}
   header.scrolled .navlinks a{color:var(--ink-soft);}
-  .navlinks a:hover{color:var(--amber);}
+  .navlinks a:hover{color:var(--gold);}
+  header.scrolled .navlinks a:hover{color:var(--amber-deep);}
   .navcta{display:flex;align-items:center;gap:20px;}
-  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
-  .burger span{width:22px;height:2px;background:var(--cream);}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+  .burger span{width:22px;height:2px;background:var(--cream);transition:.3s ease;}
   header.scrolled .burger span{background:var(--ink);}
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   /* hero */
   .hero{
     position:relative;height:100vh;min-height:640px;display:flex;align-items:center;
     overflow:hidden;color:var(--cream);
   }
-  .hero video,.hero img.fallback{
+  .hero img{
     position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-    animation:heroFadeIn 1.2s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;
+    animation:heroFadeIn 1.2s cubic-bezier(.34,.1,.68,.55) forwards,kenBurns 18s ease-out forwards 1.2s;opacity:0;
   }
   .hero::after{
     content:'';position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(20,12,6,.55) 0%,rgba(20,12,6,.35) 45%,rgba(20,12,6,.75) 100%);
-    animation:heroFadeIn 1.2s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;
+    animation:heroFadeIn 1.2s cubic-bezier(.34,.1,.68,.55) forwards;opacity:0;
   }
   @keyframes heroFadeIn{0%{opacity:0;transform:scale(1.02);}100%{opacity:1;transform:scale(1);}}
+  @keyframes kenBurns{0%{transform:scale(1);}100%{transform:scale(1.08);}}
   .hero::before{
     content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,168,46,.12) 0%,rgba(212,168,46,.04) 100%);
     z-index:1;pointer-events:none;animation:heroShimmer 2s ease-in-out infinite;opacity:0;animation-delay:.8s;
   }
   @keyframes heroShimmer{0%{opacity:0;}50%{opacity:.08;}100%{opacity:0;}}
-  .hero-loading{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,12,6,.4),rgba(20,12,6,.2),rgba(20,12,6,.4));
-    background-size:200% 100%;animation:shimmerLoad 1.6s ease-in-out infinite;z-index:1;opacity:1;
-    transition:opacity .8s ease .6s;}
-  .hero-loading.done{opacity:0;pointer-events:none;}
-  @keyframes shimmerLoad{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
   .hero-content{position:relative;z-index:2;width:100%;animation:slideUp 1.1s cubic-bezier(.34,.1,.68,.55) .3s backwards;}
   @keyframes slideUp{0%{opacity:0;transform:translateY(32px);}100%{opacity:1;transform:translateY(0);}}
-  .hero h1{font-size:clamp(48px,8vw,108px);}
+  .hero h1{font-size:clamp(48px,8vw,108px);text-shadow:0 2px 28px rgba(20,12,6,.5);}
+  .hero h1 em{color:var(--gold);}
   .hero .lede{font-size:clamp(16px,2vw,20px);max-width:480px;margin:18px 0 32px;color:rgba(250,243,230,.88);}
   .scrollcue{
     position:absolute;bottom:36px;left:32px;z-index:2;display:flex;align-items:center;gap:12px;
@@ -137,7 +142,7 @@
     overflow:hidden;
   }
   .chapter .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 6s ease;
-    filter:saturate(1.15) contrast(1.08) brightness(.98);}
+    filter:var(--media-grade);}
   .chapter.visible .bg{transform:scale(1);}
   .chapter::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(20,12,6,.78) 0%,rgba(20,12,6,.42) 55%,rgba(20,12,6,.7) 100%);}
   .chapter-inner{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:end;padding:80px 0;}
@@ -146,10 +151,6 @@
   .chapter h2{font-size:clamp(32px,5vw,56px);max-width:620px;}
   .chapter p{margin-top:16px;max-width:520px;color:rgba(250,243,230,.85);font-size:16px;}
   .chapter-dots{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:14px;}
-  .chapter-v-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:center;}
-  .jar-canvas-wrap{display:flex;justify-content:center;}
-  #jarCanvas{width:100%;max-width:360px;height:auto;}
-  @media (max-width:980px){.chapter-v-grid{grid-template-columns:1fr;}.jar-canvas-wrap{order:-1;}#jarCanvas{max-width:260px;}}
   .chapter-dots span{width:7px;height:7px;border-radius:50%;background:rgba(43,27,16,.25);display:block;transition:.3s;}
   .chapter-dots span.active{background:var(--amber);transform:scale(1.4);}
   .dots-hidden{opacity:0;pointer-events:none;}
@@ -158,8 +159,8 @@
   .storia{padding:120px 0 0;}
   .storia-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
   .storia-grid img{border-radius:var(--radius);width:100%;height:560px;object-fit:cover;
-    filter:saturate(1.14) contrast(1.07) brightness(.98);transition:.4s cubic-bezier(.34,.1,.68,.55);}
-  .storia-grid img:hover{transform:scale(1.02);filter:saturate(1.22) contrast(1.12) brightness(1.02);}
+    filter:var(--media-grade);transition:.4s cubic-bezier(.34,.1,.68,.55);}
+  .storia-grid img:hover{transform:scale(1.02);filter:saturate(1.2) contrast(1.12) brightness(1.03);}
   .stats{display:flex;gap:48px;margin-top:40px;}
   .stat b{font-family:'Fraunces',serif;font-size:40px;display:block;color:var(--amber-deep);font-weight:500;}
   .stat span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
@@ -167,7 +168,7 @@
     margin-top:90px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
     padding:18px 0;overflow:hidden;white-space:nowrap;
   }
-  .ticker-track{display:inline-block;animation:ticker 26s linear infinite;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink-soft);}
+  .ticker-track{display:inline-block;animation:ticker 26s linear infinite;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--forest);}
   @keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 
   /* processo */
@@ -180,7 +181,7 @@
   .step-media{position:relative;height:200px;border-radius:var(--radius);overflow:hidden;margin-bottom:18px;background:var(--ink);
     transition:.4s cubic-bezier(.34,.1,.68,.55);}
   .step-media video,.step-media img{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.34,.1,.68,.55);
-    filter:saturate(1.12) contrast(1.06);}
+    filter:var(--media-grade);}
   .step:hover .step-media{box-shadow:0 12px 28px rgba(0,0,0,.18);}
   .step:hover .step-media video,.step:hover .step-media img{transform:scale(1.05);}
   .step-num{position:absolute;top:12px;left:12px;font-family:'Fraunces',serif;color:var(--cream);font-size:13px;letter-spacing:.08em;background:rgba(20,12,6,.65);padding:4px 9px;border-radius:2px;
@@ -212,8 +213,8 @@
   .card{border:1px solid var(--line);transition:.4s cubic-bezier(.34,.1,.68,.55);position:relative;}
   .card:hover{border-color:var(--gold);box-shadow:0 20px 48px rgba(212,168,46,.16);}
   .card-media{height:280px;overflow:hidden;position:relative;}
-  .card-media img{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.34,.1,.68,.55);}
-  .card:hover .card-media img{transform:scale(1.06);filter:brightness(1.05) saturate(1.08);}
+  .card-media img{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.34,.1,.68,.55);filter:var(--media-grade);}
+  .card:hover .card-media img{transform:scale(1.06);filter:saturate(1.2) contrast(1.1) brightness(1.04);}
   .card-tag{position:absolute;top:14px;left:14px;background:var(--cream);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;color:var(--ink);}
   .card-body{padding:26px 24px;}
   .card-body h3{font-size:24px;margin-bottom:10px;}
@@ -231,7 +232,7 @@
   .mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:12px;}
   .mosaic figure{position:relative;overflow:hidden;margin:0;background:var(--ink);border-radius:var(--radius);
     transition:.3s cubic-bezier(.34,.1,.68,.55);}
-  .mosaic img,.mosaic video{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.34,.1,.68,.55);}
+  .mosaic img,.mosaic video{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.34,.1,.68,.55);filter:var(--media-grade);}
   .mosaic figcaption{
     position:absolute;bottom:10px;left:12px;color:var(--cream);font-size:11px;
     letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:.35s cubic-bezier(.34,.1,.68,.55);text-shadow:0 1px 4px rgba(0,0,0,.6);
@@ -239,7 +240,7 @@
   }
   .mosaic figure:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.24);}
   .mosaic figure:hover figcaption{opacity:1;transform:translateY(-6px);}
-  .mosaic figure:hover img,.mosaic figure:hover video{filter:brightness(.88) saturate(1.1);}
+  .mosaic figure:hover img,.mosaic figure:hover video{filter:saturate(1.2) contrast(1.1) brightness(.9);}
   .mosaic .tall{grid-row:span 2;}
   .mosaic .wide{grid-column:span 2;}
   .video-pin{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(20,12,6,.7);display:flex;align-items:center;justify-content:center;
@@ -259,7 +260,7 @@
 
   /* contatto */
   .contatto{position:relative;color:var(--cream);padding:140px 0;overflow:hidden;}
-  .contatto video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.18) contrast(1.1) brightness(.95);}
+  .contatto video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--media-grade);}
   .contatto::after{content:'';position:absolute;inset:0;background:rgba(20,12,6,.74);}
   .contatto .wrap{position:relative;z-index:2;}
   .contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:64px;align-items:start;}
@@ -282,6 +283,17 @@
 
   @media (max-width:980px){
     .navlinks{display:none;}
+    .navlinks.mobile-open{
+      display:flex;flex-direction:column;gap:20px;
+      position:fixed;top:64px;left:0;right:0;z-index:99;
+      background:rgba(250,243,230,.98);backdrop-filter:blur(10px);
+      padding:28px 32px;box-shadow:0 12px 28px rgba(36,27,18,.14);
+      border-top:2px solid var(--forest);
+      animation:menuDrop .3s cubic-bezier(.34,.1,.68,.55);
+    }
+    .navlinks.mobile-open a{color:var(--ink);font-size:16px;}
+    .navlinks.mobile-open a:hover{color:var(--amber-deep);}
+    @keyframes menuDrop{0%{opacity:0;transform:translateY(-10px);}100%{opacity:1;transform:translateY(0);}}
     .burger{display:flex;}
     .storia-grid,.contact-grid,.footer-grid{grid-template-columns:1fr;gap:36px;}
     .steps{grid-template-columns:repeat(2,1fr);}
@@ -316,7 +328,7 @@
   <div class="wrap">
     <nav>
       <a class="logo" href="#">Oro del Subasio</a>
-      <div class="navlinks">
+      <div class="navlinks" id="navlinks">
         <a href="#storia">Storia</a>
         <a href="#composizione">Composizione</a>
         <a href="#prodotti">Prodotti</a>
@@ -325,7 +337,7 @@
       </div>
       <div class="navcta">
         <a href="#contatto" class="btn">Ordina ora</a>
-        <div class="burger" id="burger"><span></span><span></span><span></span></div>
+        <button class="burger" id="burger" aria-label="Apri il menu di navigazione" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
       </div>
     </nav>
   </div>
@@ -333,10 +345,7 @@
 
 <!-- HERO -->
 <section class="hero" id="heroSection">
-  <div class="hero-loading" id="heroLoading"></div>
-  <video autoplay muted loop playsinline poster="assets/hero-vasetto-vintage.jpg" id="heroVideo">
-    <source src="assets/miele-versato-vasetto-1.mp4" type="video/mp4">
-  </video>
+  <img src="assets/hero-vasetto-vintage.jpg" width="1800" height="2700" fetchpriority="high" alt="Vasetto di miele vintage sul Monte Subasio">
   <div class="wrap hero-content">
     <span class="eyebrow" style="color:var(--gold)">Monte Subasio · Umbria · Italia · dal 1987</span>
     <h1>Oro del <em>Subasio</em></h1>
@@ -353,7 +362,7 @@
   </div>
 
   <section class="chapter" data-chapter="0">
-    <img class="bg" src="assets/api-cluster-melario.jpg" alt="Api sul melario al sole" loading="lazy">
+    <img class="bg" src="assets/api-cluster-melario.jpg" width="1024" height="1280" alt="Api sul melario al sole" loading="lazy">
     <div class="wrap chapter-inner">
       <div class="chapter-num">Capitolo I<small>Il volo</small></div>
       <div>
@@ -364,7 +373,7 @@
   </section>
 
   <section class="chapter" data-chapter="1">
-    <img class="bg" src="assets/favo-api-coperto.jpg" alt="Favo coperto di api operaie" loading="lazy">
+    <img class="bg" src="assets/favo-api-coperto.jpg" width="1920" height="2560" alt="Favo coperto di api operaie" loading="lazy">
     <div class="wrap chapter-inner">
       <div class="chapter-num">Capitolo II<small>Il nettare</small></div>
       <div>
@@ -375,7 +384,7 @@
   </section>
 
   <section class="chapter" data-chapter="2">
-    <video class="bg" muted loop playsinline preload="none" poster="assets/api-melario-dettaglio-poster.jpg" data-src="assets/api-melario-dettaglio.mp4"></video>
+    <video class="bg" muted loop playsinline preload="none" aria-hidden="true" poster="assets/api-melario-dettaglio-poster.jpg" data-src="assets/api-melario-dettaglio.mp4"></video>
     <div class="wrap chapter-inner">
       <div class="chapter-num">Capitolo III<small>L'alveare</small></div>
       <div>
@@ -386,7 +395,7 @@
   </section>
 
   <section class="chapter" data-chapter="3">
-    <img class="bg" src="assets/miele-estrazione-favo.jpg" alt="Favo scuro nel maturatore" loading="lazy">
+    <img class="bg" src="assets/miele-estrazione-favo.jpg" width="1200" height="1600" alt="Favo scuro nel maturatore" loading="lazy">
     <div class="wrap chapter-inner">
       <div class="chapter-num">Capitolo IV<small>La molecola</small></div>
       <div>
@@ -397,17 +406,12 @@
   </section>
 
   <section class="chapter chapter--v" data-chapter="4">
-    <video class="bg" muted loop playsinline preload="none" poster="assets/miele-versato-vasetto-2-poster.jpg" data-src="assets/miele-versato-vasetto-2.mp4" style="opacity:.35"></video>
-    <div class="wrap chapter-inner chapter-inner--v">
+    <video class="bg" muted loop playsinline preload="none" aria-hidden="true" poster="assets/miele-versato-vasetto-2-poster.jpg" data-src="assets/miele-versato-vasetto-2.mp4"></video>
+    <div class="wrap chapter-inner">
       <div class="chapter-num">Capitolo V<small>Il vasetto</small></div>
-      <div class="chapter-v-grid">
-        <div>
-          <h2 class="reveal">Nel vasetto, <em>intatto</em></h2>
-          <p class="reveal">Filtrazione a freddo. Nessun riscaldamento oltre 37°C. Nessun additivo. Dal fiore al vasetto, ogni goccia porta in sé la purezza di un ecosistema protetto.</p>
-        </div>
-        <div class="jar-canvas-wrap">
-          <canvas id="jarCanvas" width="360" height="420" aria-label="Animazione: goccia di miele che diventa vasetto dorato"></canvas>
-        </div>
+      <div>
+        <h2 class="reveal">Nel vasetto, <em>intatto</em></h2>
+        <p class="reveal">Filtrazione a freddo. Nessun riscaldamento oltre 37°C. Nessun additivo. Dal fiore al vasetto, ogni goccia porta in sé la purezza di un ecosistema protetto.</p>
       </div>
     </div>
   </section>
@@ -422,12 +426,12 @@
         <h2 class="reveal">Tre generazioni di <em>apicoltori</em></h2>
         <p class="reveal" style="margin-top:18px;color:var(--ink-soft);max-width:460px;">Dal 1987, la famiglia Rossi coltiva le proprie arnie sulle pendici del Monte Subasio, nel cuore del Parco Naturale Regionale dell'Umbria. Un mestiere antico trasmesso di padre in figlio, fatto di rispetto per la natura e pazienza per i suoi ritmi.</p>
         <div class="stats reveal">
-          <div class="stat"><b data-count="37">0</b><span>Anni</span></div>
+          <div class="stat"><b data-count="39">0</b><span>Anni</span></div>
           <div class="stat"><b data-count="120">0</b><span>Arnie</span></div>
           <div class="stat"><b data-count="1290">0</b><span>Metri slm</span></div>
         </div>
       </div>
-      <img src="assets/apicoltore-al-lavoro.jpg" alt="Apicoltore al lavoro tra gli ulivi del Subasio" loading="lazy">
+      <img src="assets/apicoltore-al-lavoro.jpg" width="1920" height="2560" alt="Apicoltore al lavoro tra gli ulivi del Subasio" loading="lazy">
     </div>
   </div>
   <div class="ticker">
@@ -444,22 +448,22 @@
     </div>
     <div class="steps">
       <div class="step reveal">
-        <div class="step-media"><span class="step-num">01</span><video muted loop playsinline preload="none" poster="assets/api-tra-favi-dettaglio-poster.jpg" data-src="assets/api-tra-favi-dettaglio.mp4"></video></div>
+        <div class="step-media"><span class="step-num">01</span><video muted loop playsinline preload="none" aria-hidden="true" poster="assets/api-tra-favi-dettaglio-poster.jpg" data-src="assets/api-tra-favi-dettaglio.mp4"></video></div>
         <h3>L'ape raccoglie</h3>
         <p>5 km di volo, 1.500 fiori al giorno, tra orchidee, narcisi e lavanda selvatica del Subasio.</p>
       </div>
       <div class="step reveal">
-        <div class="step-media"><span class="step-num">02</span><img src="assets/favo-api-coperto.jpg" alt="Api che trasformano il nettare" loading="lazy"></div>
+        <div class="step-media"><span class="step-num">02</span><img src="assets/favo-api-coperto.jpg" width="1920" height="2560" alt="Api che trasformano il nettare" loading="lazy"></div>
         <h3>La colonia trasforma</h3>
         <p>60.000 api disidratano il nettare, aggiungono enzimi, lo sigillano con cera. Settimane di lavoro biologico preciso.</p>
       </div>
       <div class="step reveal">
-        <div class="step-media"><span class="step-num">03</span><video muted loop playsinline preload="none" poster="assets/apicoltore-mostra-favo-poster.jpg" data-src="assets/apicoltore-mostra-favo.mp4"></video></div>
+        <div class="step-media"><span class="step-num">03</span><video muted loop playsinline preload="none" aria-hidden="true" poster="assets/apicoltore-mostra-favo-poster.jpg" data-src="assets/apicoltore-mostra-favo.mp4"></video></div>
         <h3>Raccolta con rispetto</h3>
         <p>Solo favi opercolati, abbondanti scorte invernali alle api. Mai forzature, mai compromessi.</p>
       </div>
       <div class="step reveal">
-        <div class="step-media"><span class="step-num">04</span><img src="assets/invasettamento-miele.jpg" alt="Miele filtrato versato nel vasetto" loading="lazy"></div>
+        <div class="step-media"><span class="step-num">04</span><img src="assets/invasettamento-miele.jpg" width="1920" height="2560" alt="Miele filtrato versato nel vasetto" loading="lazy"></div>
         <h3>Filtrazione a freddo</h3>
         <p>Nessun riscaldamento oltre 37°C. Nessun additivo. Il miele arriva intatto, vivo, esattamente com'era nell'arnia.</p>
       </div>
@@ -469,7 +473,7 @@
 
 <!-- COMPOSIZIONE -->
 <section class="composizione" id="composizione">
-  <img class="texture" src="assets/disopercolatura-favo-poster.jpg" alt="" loading="lazy">
+  <img class="texture" src="assets/disopercolatura-favo-poster.jpg" width="1280" height="1706" alt="" aria-hidden="true" loading="lazy">
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Composizione chimica</span>
@@ -494,7 +498,7 @@
     </div>
     <div class="cards">
       <div class="card reveal">
-        <div class="card-media"><span class="card-tag">Millefiori</span><img src="assets/invasettamento-miele.jpg" alt="Miele Millefiori del Subasio" loading="lazy"></div>
+        <div class="card-media"><span class="card-tag">Millefiori</span><img src="assets/invasettamento-miele.jpg" width="1920" height="2560" alt="Miele Millefiori del Subasio" loading="lazy"></div>
         <div class="card-body">
           <h3>Millefiori del Subasio</h3>
           <p>Profumo floreale complesso con note di lavanda, trifoglio e maggiorana selvatica. Colore ambrato dorato, consistenza cremosa.</p>
@@ -503,7 +507,7 @@
         </div>
       </div>
       <div class="card reveal">
-        <div class="card-media"><span class="card-tag">Riserva</span><img src="assets/favo-api-coperto.jpg" alt="Miele di Acacia Riserva" loading="lazy"></div>
+        <div class="card-media"><span class="card-tag">Riserva</span><img src="assets/favo-api-coperto.jpg" width="1920" height="2560" alt="Miele di Acacia Riserva" loading="lazy"></div>
         <div class="card-body">
           <h3>Acacia · Alta Quota</h3>
           <p>Cristallino, quasi trasparente, di rara delicatezza. Non cristallizza, si conserva anni. Il profilo più fine dell'apicoltura italiana.</p>
@@ -512,7 +516,7 @@
         </div>
       </div>
       <div class="card reveal">
-        <div class="card-media"><span class="card-tag">Boschi del Subasio</span><img src="assets/disopercolatura-miele-scuro-poster.jpg" alt="Miele di Castagno" loading="lazy"></div>
+        <div class="card-media"><span class="card-tag">Boschi del Subasio</span><img src="assets/disopercolatura-miele-scuro-poster.jpg" width="480" height="848" alt="Miele di Castagno" loading="lazy"></div>
         <div class="card-body">
           <h3>Castagno</h3>
           <p>Scuro, intenso, amaro in chiusura. Eccezionale con formaggi stagionati, salumi, carni rosse. Tra i mieli più ricchi di antiossidanti.</p>
@@ -534,26 +538,31 @@
     </div>
     <div class="mosaic">
       <figure class="wide tall reveal">
-        <img src="assets/apicoltore-al-lavoro.jpg" alt="Apicoltore al lavoro" loading="lazy">
+        <img src="assets/apicoltore-al-lavoro.jpg" width="1920" height="2560" alt="Apicoltore al lavoro" loading="lazy">
         <figcaption>Controllo del melario</figcaption>
       </figure>
       <figure class="reveal">
-        <video muted loop playsinline preload="none" poster="assets/favo-miele-scuro-dettaglio-poster.jpg" data-src="assets/favo-miele-scuro-dettaglio.mp4"></video>
+        <video muted loop playsinline preload="none" aria-hidden="true" poster="assets/favo-miele-scuro-dettaglio-poster.jpg" data-src="assets/favo-miele-scuro-dettaglio.mp4"></video>
         <span class="video-pin"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         <figcaption>Favo opercolato</figcaption>
       </figure>
       <figure class="reveal">
-        <img src="assets/miele-estrazione-favo.jpg" alt="Favo nel maturatore" loading="lazy">
+        <img src="assets/miele-estrazione-favo.jpg" width="1200" height="1600" alt="Favo nel maturatore" loading="lazy">
         <figcaption>In maturazione</figcaption>
       </figure>
       <figure class="tall reveal">
-        <video muted loop playsinline preload="none" poster="assets/disopercolatura-favo-poster.jpg" data-src="assets/disopercolatura-favo.mp4"></video>
+        <video muted loop playsinline preload="none" aria-hidden="true" poster="assets/disopercolatura-favo-poster.jpg" data-src="assets/disopercolatura-favo.mp4"></video>
         <span class="video-pin"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         <figcaption>Disopercolatura</figcaption>
       </figure>
       <figure class="wide reveal">
-        <img src="assets/api-cluster-melario.jpg" alt="Api sul melario" loading="lazy">
+        <img src="assets/api-cluster-melario.jpg" width="1024" height="1280" alt="Api sul melario" loading="lazy">
         <figcaption>Le nostre api</figcaption>
+      </figure>
+      <figure class="wide reveal">
+        <video muted loop playsinline preload="none" aria-hidden="true" data-src="assets/miele-versato-vasetto-1.mp4"></video>
+        <span class="video-pin"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <figcaption>Il miele nel vasetto</figcaption>
       </figure>
     </div>
   </div>
@@ -588,9 +597,7 @@
 
 <!-- CONTATTO -->
 <section class="contatto" id="contatto">
-  <video autoplay muted loop playsinline poster="assets/disopercolatura-miele-scuro-poster.jpg">
-    <source src="assets/disopercolatura-miele-scuro.mp4" type="video/mp4">
-  </video>
+  <video muted loop playsinline preload="none" aria-hidden="true" poster="assets/disopercolatura-miele-scuro-poster.jpg" data-src="assets/disopercolatura-miele-scuro.mp4"></video>
   <div class="wrap">
     <div class="contact-grid">
       <div>
@@ -636,20 +643,6 @@
 </footer>
 
 <script>
-  // hero video loading state
-  (function(){
-    const heroVideo = document.getElementById('heroVideo');
-    const heroLoading = document.getElementById('heroLoading');
-    if(heroVideo && heroLoading){
-      heroVideo.addEventListener('playing', ()=>{
-        heroLoading.classList.add('done');
-      }, {once:true});
-      setTimeout(()=>{
-        heroLoading.classList.add('done');
-      }, 2400);
-    }
-  })();
-
   // progress bar
   const progress = document.getElementById('progress');
   window.addEventListener('scroll', () => {
@@ -721,185 +714,18 @@
   }, { threshold: .4 });
   stats.forEach(s => statObs.observe(s));
 
-  // mobile nav toggle
-  document.getElementById('burger').addEventListener('click', () => {
-    document.querySelector('.navlinks').classList.toggle('mobile-open');
+  // mobile nav toggle (accessibile: aggiorna aria-expanded, chiude al click su un link)
+  const burger = document.getElementById('burger');
+  const navlinks = document.getElementById('navlinks');
+  const closeMenu = () => {
+    navlinks.classList.remove('mobile-open');
+    burger.setAttribute('aria-expanded', 'false');
+  };
+  burger.addEventListener('click', () => {
+    const open = navlinks.classList.toggle('mobile-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-
-  // ===== Capitolo V: goccia che diventa vasetto dorato con scintille =====
-  (function(){
-    const canvas = document.getElementById('jarCanvas');
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-    const easeOutBack = t => {
-      const c1 = 1.70158, c3 = c1 + 1;
-      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-    };
-
-    const JAR_CX = W/2, JAR_TOP = 215, JAR_BOTTOM = 360, JAR_W = 150;
-    let splashParticles = [];
-    let startTime = null, visible = false, rafId = null, splashSpawned = false, lastT = 0;
-
-    function drawGlow(){
-      const g = ctx.createRadialGradient(JAR_CX, 300, 10, JAR_CX, 300, 220);
-      g.addColorStop(0, 'rgba(212,168,46,.35)');
-      g.addColorStop(1, 'rgba(212,168,46,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-    }
-
-    function drawDrop(progress){
-      const y = 10 + (JAR_TOP - 10) * easeOutCubic(progress);
-      const squash = progress > .92 ? 1 + (progress-.92)*4 : 1;
-      ctx.save();
-      ctx.translate(JAR_CX, y);
-      ctx.scale(1/squash, squash);
-      ctx.beginPath();
-      ctx.ellipse(0,0,9,13,0,0,Math.PI*2);
-      const g = ctx.createLinearGradient(0,-13,0,13);
-      g.addColorStop(0,'#E8B23A'); g.addColorStop(1,'#A8650F');
-      ctx.fillStyle = g;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function spawnSplash(){
-      splashParticles = [];
-      for(let i=0;i<7;i++){
-        const a = (Math.PI*2*i)/7 + Math.random()*.3;
-        splashParticles.push({ x: JAR_CX, y: JAR_TOP, vx: Math.cos(a)*1.6, vy: Math.sin(a)*1.6 - 1.2, life: 1 });
-      }
-    }
-
-    function drawSplash(dt){
-      splashParticles.forEach(p=>{
-        p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life -= dt/350;
-        if(p.life>0){
-          ctx.globalAlpha = Math.max(0,p.life);
-          ctx.fillStyle = '#E8B23A';
-          ctx.beginPath(); ctx.arc(p.x,p.y,2.4,0,Math.PI*2); ctx.fill();
-          ctx.globalAlpha = 1;
-        }
-      });
-      splashParticles = splashParticles.filter(p=>p.life>0);
-    }
-
-    function drawJar(scale){
-      if(scale<=0) return;
-      ctx.save();
-      ctx.translate(JAR_CX, (JAR_TOP+JAR_BOTTOM)/2);
-      ctx.scale(scale, scale);
-      ctx.translate(-JAR_CX, -(JAR_TOP+JAR_BOTTOM)/2);
-
-      const r = 14, x0 = JAR_CX - JAR_W/2, x1 = JAR_CX + JAR_W/2;
-      ctx.beginPath();
-      ctx.moveTo(x0, JAR_TOP+30);
-      ctx.lineTo(x0, JAR_BOTTOM-r);
-      ctx.quadraticCurveTo(x0, JAR_BOTTOM, x0+r, JAR_BOTTOM);
-      ctx.lineTo(x1-r, JAR_BOTTOM);
-      ctx.quadraticCurveTo(x1, JAR_BOTTOM, x1, JAR_BOTTOM-r);
-      ctx.lineTo(x1, JAR_TOP+30);
-      ctx.closePath();
-      const bodyG = ctx.createLinearGradient(x0,0,x1,0);
-      bodyG.addColorStop(0,'#B9690F'); bodyG.addColorStop(.5,'#E8B23A'); bodyG.addColorStop(1,'#9C5A12');
-      ctx.fillStyle = bodyG;
-      ctx.fill();
-
-      ctx.fillStyle = '#5A4534';
-      ctx.fillRect(JAR_CX-32, JAR_TOP+6, 64, 26);
-      ctx.beginPath();
-      ctx.ellipse(JAR_CX, JAR_TOP+6, 34, 10, 0, 0, Math.PI*2);
-      ctx.fillStyle = '#3F2E1C';
-      ctx.fill();
-
-      const labelY = (JAR_TOP+JAR_BOTTOM)/2 + 10;
-      ctx.fillStyle = '#FAF3E6';
-      ctx.fillRect(x0+10, labelY-26, JAR_W-20, 52);
-      ctx.strokeStyle = '#C97A1B'; ctx.lineWidth = 1.5;
-      ctx.strokeRect(x0+10, labelY-26, JAR_W-20, 52);
-      ctx.fillStyle = '#2B1B10';
-      ctx.font = '600 13px Fraunces, serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Oro del', JAR_CX, labelY-4);
-      ctx.fillText('Subasio', JAR_CX, labelY+14);
-      ctx.restore();
-    }
-
-    function drawSparkles(t){
-      const pts = [
-        [JAR_CX-95,JAR_TOP+10],[JAR_CX+92,JAR_TOP+40],[JAR_CX-80,JAR_BOTTOM-30],
-        [JAR_CX+88,JAR_BOTTOM-60],[JAR_CX-40,JAR_TOP-15],[JAR_CX+50,JAR_TOP-25],
-        [JAR_CX-105,JAR_BOTTOM-90],[JAR_CX+100,JAR_TOP+90]
-      ];
-      pts.forEach((p,i)=>{
-        const phase = (t/600 + i*0.7) % (Math.PI*2);
-        const op = (Math.sin(phase)+1)/2 * .8 + .15;
-        const size = 3 + (Math.sin(phase)+1)*2;
-        ctx.save();
-        ctx.translate(p[0],p[1]);
-        ctx.globalAlpha = op;
-        ctx.fillStyle = '#D4A82E';
-        ctx.beginPath();
-        ctx.moveTo(0,-size); ctx.lineTo(size*.3,-size*.3); ctx.lineTo(size,0);
-        ctx.lineTo(size*.3,size*.3); ctx.lineTo(0,size); ctx.lineTo(-size*.3,size*.3);
-        ctx.lineTo(-size,0); ctx.lineTo(-size*.3,-size*.3);
-        ctx.closePath(); ctx.fill();
-        ctx.restore();
-      });
-      ctx.globalAlpha = 1;
-    }
-
-    function frame(now){
-      if(!startTime) startTime = now;
-      const elapsed = now - startTime;
-      const dt = now - (lastT||now); lastT = now;
-
-      ctx.clearRect(0,0,W,H);
-      drawGlow();
-
-      if(reduceMotion){
-        drawJar(1);
-        drawSparkles(now);
-        if(visible) rafId = requestAnimationFrame(frame);
-        return;
-      }
-
-      const dropDur = 650, jarDur = 600, jarStart = dropDur + 60;
-
-      if(elapsed < dropDur){
-        drawDrop(elapsed/dropDur);
-      } else {
-        if(!splashSpawned){ spawnSplash(); splashSpawned = true; }
-        drawSplash(dt);
-      }
-      if(elapsed > jarStart){
-        const jp = Math.min(1, (elapsed-jarStart)/jarDur);
-        drawJar(easeOutBack(jp));
-      }
-      if(elapsed > jarStart + jarDur*0.6){
-        drawSparkles(now);
-      }
-      if(visible) rafId = requestAnimationFrame(frame);
-    }
-
-    const jarObs = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          visible = true; startTime = null; splashSpawned = false; lastT = 0;
-          if(!rafId) rafId = requestAnimationFrame(frame);
-        } else {
-          visible = false;
-          if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
-        }
-      });
-    }, {threshold:.5});
-    const vChapter = document.querySelector('.chapter--v');
-    if(vChapter) jarObs.observe(vChapter);
-  })();
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 </script>
 </body>
 </html>
